@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#1a1a2e">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Caderneta">
+<title>Caderneta 💰</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d14;
+    --surface: #16162a;
+    --surface2: #1e1e38;
+    --border: rgba(255,255,255,0.07);
+    --text: #f0f0ff;
+    --muted: #7878a0;
+    --accent: #7c6af7;
+    --accent2: #f7c26a;
+    --green: #4ecca3;
+    --red: #f76a6a;
+
+    --cat-alimentacao: #f7836a;
+    --cat-transporte: #6aa8f7;
+    --cat-lazer: #c06af7;
+    --cat-saude: #4ecca3;
+    --cat-educacao: #f7c26a;
+    --cat-moradia: #f76ab0;
+    --cat-outros: #7878a0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    max-width: 430px;
+    margin: 0 auto;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* HEADER */
+  .header {
+    padding: 16px 20px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--bg);
+  }
+
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .logo-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--accent), #b06af7);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    box-shadow: 0 4px 16px rgba(124,106,247,0.4);
+  }
+
+  .logo-text {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+
+  .logo-text span { color: var(--accent2); }
+
+  .month-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 4px 8px;
+    border: 1px solid var(--border);
+  }
+
+  .month-btn {
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    padding: 4px 6px;
+    font-size: 16px;
+    border-radius: 6px;
+    transition: all 0.2s;
+  }
+  .month-btn:active { background: var(--surface2); color: var(--text); }
+
+  .month-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    min-width: 90px;
+    text-align: center;
+  }
+
+  /* TOTAL CARD */
+  .total-card {
+    background: linear-gradient(135deg, var(--accent) 0%, #5a4fcf 100%);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(124,106,247,0.35);
+  }
+
+  .total-card::before {
+    content: '';
+    position: absolute;
+    top: -30px; right: -30px;
+    width: 120px; height: 120px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 50%;
+  }
+  .total-card::after {
+    content: '';
+    position: absolute;
+    bottom: -50px; right: 30px;
+    width: 160px; height: 160px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 50%;
+  }
+
+  .total-label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.8;
+    margin-bottom: 6px;
+  }
+
+  .total-value {
+    font-family: 'DM Mono', monospace;
+    font-size: 36px;
+    font-weight: 500;
+    letter-spacing: -1px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .total-count {
+    font-size: 12px;
+    opacity: 0.7;
+    margin-top: 4px;
+  }
+
+  /* CATS BAR */
+  .cats-bar {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    margin-bottom: 4px;
+    scrollbar-width: none;
+  }
+  .cats-bar::-webkit-scrollbar { display: none; }
+
+  .cat-chip {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--muted);
+  }
+
+  .cat-chip.active {
+    color: var(--text);
+    border-color: var(--cat-color, var(--accent));
+    background: rgba(124,106,247,0.12);
+  }
+
+  .cat-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--cat-color, var(--accent));
+  }
+
+  /* LISTA */
+  .list-section {
+    flex: 1;
+    padding: 0 20px;
+    overflow-y: auto;
+    padding-bottom: 120px;
+  }
+
+  .list-header {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 16px 0 10px;
+  }
+
+  .entry-item {
+    background: var(--surface);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: 1px solid var(--border);
+    animation: slideIn 0.25s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .entry-left-bar {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--cat-color, var(--accent));
+    border-radius: 3px 0 0 3px;
+  }
+
+  .entry-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+    background: rgba(124,106,247,0.1);
+  }
+
+  .entry-info { flex: 1; min-width: 0; }
+
+  .entry-desc {
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 2px;
+  }
+
+  .entry-meta {
+    font-size: 11px;
+    color: var(--muted);
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .entry-cat-badge {
+    background: rgba(255,255,255,0.07);
+    border-radius: 4px;
+    padding: 1px 5px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  .entry-value {
+    font-family: 'DM Mono', monospace;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--green);
+    flex-shrink: 0;
+  }
+
+  .entry-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-left: 4px;
+  }
+
+  .action-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 6px;
+    font-size: 14px;
+    opacity: 0.5;
+    transition: all 0.2s;
+  }
+  .action-btn:active { opacity: 1; background: var(--surface2); }
+
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+  }
+
+  .empty-icon { font-size: 48px; margin-bottom: 12px; }
+  .empty-text { font-size: 14px; line-height: 1.6; }
+
+  /* FAB */
+  .fab {
+    position: fixed;
+    bottom: 24px;
+    right: 20px;
+    left: 20px;
+    max-width: 390px;
+    margin: 0 auto;
+    background: linear-gradient(135deg, var(--accent), #5a4fcf);
+    border: none;
+    border-radius: 16px;
+    color: white;
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    padding: 16px;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(124,106,247,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    z-index: 200;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .fab:active { transform: scale(0.97); box-shadow: 0 4px 12px rgba(124,106,247,0.4); }
+
+  /* MODAL */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(4px);
+    z-index: 300;
+    display: none;
+    align-items: flex-end;
+  }
+  .overlay.open { display: flex; }
+
+  .modal {
+    background: var(--surface);
+    border-radius: 24px 24px 0 0;
+    padding: 24px 20px 40px;
+    width: 100%;
+    border-top: 1px solid var(--border);
+    animation: slideUp 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+
+  .modal-handle {
+    width: 40px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    margin: 0 auto 20px;
+  }
+
+  .modal-title {
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 20px;
+  }
+
+  .field-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .field-input {
+    width: 100%;
+    background: var(--surface2);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    padding: 13px 16px;
+    outline: none;
+    transition: border-color 0.2s;
+    margin-bottom: 16px;
+  }
+  .field-input:focus { border-color: var(--accent); }
+  .field-input::placeholder { color: var(--muted); }
+
+  .value-input {
+    font-family: 'DM Mono', monospace;
+    font-size: 24px;
+    font-weight: 500;
+  }
+
+  .cat-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .cat-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 10px 4px;
+    border-radius: 12px;
+    border: 1.5px solid var(--border);
+    background: var(--surface2);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    text-align: center;
+  }
+
+  .cat-option.selected {
+    border-color: var(--cat-color);
+    background: rgba(124,106,247,0.12);
+    color: var(--text);
+  }
+
+  .cat-option-icon { font-size: 22px; }
+
+  .modal-btn {
+    width: 100%;
+    background: linear-gradient(135deg, var(--accent), #5a4fcf);
+    border: none;
+    border-radius: 14px;
+    color: white;
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    padding: 16px;
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+  .modal-btn:active { transform: scale(0.98); }
+
+  .modal-cancel {
+    background: var(--surface2);
+    margin-top: 10px;
+    color: var(--muted);
+  }
+
+  /* CONFIRM DELETE */
+  .confirm-modal {
+    text-align: center;
+  }
+  .confirm-modal .modal-title { font-size: 18px; }
+  .confirm-text { color: var(--muted); font-size: 14px; margin-bottom: 20px; }
+  .btn-delete { background: linear-gradient(135deg, var(--red), #c04040); }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-80px);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    z-index: 999;
+    transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    white-space: nowrap;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  .no-entries { display: none; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-top">
+    <div class="logo">
+      <div class="logo-icon">💰</div>
+      <div class="logo-text">Cader<span>neta</span></div>
+    </div>
+    <div class="month-nav">
+      <button class="month-btn" onclick="changeMonth(-1)">‹</button>
+      <div class="month-label" id="monthLabel">—</div>
+      <button class="month-btn" onclick="changeMonth(1)">›</button>
+    </div>
+  </div>
+
+  <!-- TOTAL CARD -->
+  <div class="total-card">
+    <div class="total-label">Total do Mês</div>
+    <div class="total-value" id="totalValue">R$ 0,00</div>
+    <div class="total-count" id="totalCount">0 lançamentos</div>
+  </div>
+
+  <!-- CATS FILTER -->
+  <div class="cats-bar" id="catsBar">
+    <div class="cat-chip active" data-cat="todos" onclick="filterCat('todos')">
+      <div class="cat-dot" style="background:var(--accent)"></div> Todos
+    </div>
+  </div>
+</div>
+
+<!-- LISTA -->
+<div class="list-section">
+  <div class="list-header">Lançamentos</div>
+  <div id="entryList"></div>
+  <div class="empty-state" id="emptyState">
+    <div class="empty-icon">📋</div>
+    <div class="empty-text">Nenhum lançamento ainda.<br>Toque em <strong>+ Adicionar</strong> para começar!</div>
+  </div>
+</div>
+
+<!-- FAB -->
+<button class="fab" onclick="openAdd()">+ Adicionar</button>
+
+<!-- MODAL ADD/EDIT -->
+<div class="overlay" id="addOverlay" onclick="closeOnBg(event,'addOverlay')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modalTitle">Novo Lançamento</div>
+
+    <div class="field-label">Descrição</div>
+    <input class="field-input" id="inputDesc" placeholder="Ex: Mercado, Uber, Netflix..." maxlength="60">
+
+    <div class="field-label">Valor (R$)</div>
+    <input class="field-input value-input" id="inputVal" placeholder="0,00" inputmode="decimal">
+
+    <div class="field-label">Categoria</div>
+    <div class="cat-grid" id="catGrid"></div>
+
+    <button class="modal-btn" id="saveBtn" onclick="saveEntry()">Salvar</button>
+    <button class="modal-btn modal-cancel" onclick="closeModal('addOverlay')">Cancelar</button>
+  </div>
+</div>
+
+<!-- MODAL CONFIRM DELETE -->
+<div class="overlay" id="delOverlay" onclick="closeOnBg(event,'delOverlay')">
+  <div class="modal confirm-modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Apagar lançamento?</div>
+    <div class="confirm-text" id="delDesc">—</div>
+    <button class="modal-btn btn-delete" onclick="confirmDelete()">Apagar</button>
+    <button class="modal-btn modal-cancel" onclick="closeModal('delOverlay')">Cancelar</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+const CATS = [
+  { id: 'alimentacao', label: 'Alimentação', icon: '🍔', color: '#f7836a' },
+  { id: 'transporte',  label: 'Transporte',  icon: '🚗', color: '#6aa8f7' },
+  { id: 'lazer',       label: 'Lazer',       icon: '🎮', color: '#c06af7' },
+  { id: 'saude',       label: 'Saúde',       icon: '💊', color: '#4ecca3' },
+  { id: 'educacao',    label: 'Educação',    icon: '📚', color: '#f7c26a' },
+  { id: 'moradia',     label: 'Moradia',     icon: '🏠', color: '#f76ab0' },
+  { id: 'outros',      label: 'Outros',      icon: '📦', color: '#7878a0' },
+];
+
+const MONTHS = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho',
+                 'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+
+let state = { entries: [], currentMonth: null, currentYear: null, filterCat: 'todos', editId: null, deleteId: null };
+
+function loadData() {
+  try { return JSON.parse(localStorage.getItem('caderneta_data') || '[]'); } catch { return []; }
+}
+function saveData() {
+  localStorage.setItem('caderneta_data', JSON.stringify(state.entries));
+}
+
+function init() {
+  const now = new Date();
+  state.currentMonth = now.getMonth();
+  state.currentYear = now.getFullYear();
+  state.entries = loadData();
+  buildCatGrid();
+  buildCatChips();
+  render();
+}
+
+function changeMonth(d) {
+  state.currentMonth += d;
+  if (state.currentMonth > 11) { state.currentMonth = 0; state.currentYear++; }
+  if (state.currentMonth < 0)  { state.currentMonth = 11; state.currentYear--; }
+  state.filterCat = 'todos';
+  updateCatChips();
+  render();
+}
+
+function getFiltered() {
+  return state.entries.filter(e => {
+    const d = new Date(e.date);
+    return d.getMonth() === state.currentMonth && d.getFullYear() === state.currentYear
+      && (state.filterCat === 'todos' || e.cat === state.filterCat);
+  });
+}
+
+function render() {
+  document.getElementById('monthLabel').textContent = `${MONTHS[state.currentMonth].slice(0,3)} ${state.currentYear}`;
+
+  const entries = getFiltered();
+  const total = entries.reduce((s, e) => s + e.value, 0);
+  document.getElementById('totalValue').textContent = fmtMoney(total);
+  document.getElementById('totalCount').textContent = `${entries.length} lançamento${entries.length !== 1 ? 's' : ''}`;
+
+  const list = document.getElementById('entryList');
+  const empty = document.getElementById('emptyState');
+
+  if (!entries.length) { list.innerHTML = ''; empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+
+  // sort by date desc
+  const sorted = [...entries].sort((a, b) => new Date(b.date) - new Date(a.date));
+  list.innerHTML = sorted.map(e => entryHTML(e)).join('');
+}
+
+function entryHTML(e) {
+  const cat = CATS.find(c => c.id === e.cat) || CATS[CATS.length-1];
+  const d = new Date(e.date);
+  const day = String(d.getDate()).padStart(2,'0');
+  const mon = MONTHS[d.getMonth()].slice(0,3);
+  return `<div class="entry-item" id="entry-${e.id}">
+    <div class="entry-left-bar" style="background:${cat.color}"></div>
+    <div class="entry-icon" style="background:${cat.color}22">${cat.icon}</div>
+    <div class="entry-info">
+      <div class="entry-desc">${escHtml(e.desc)}</div>
+      <div class="entry-meta">
+        <span>${day} ${mon}</span>
+        <span class="entry-cat-badge" style="color:${cat.color}">${cat.label}</span>
+      </div>
+    </div>
+    <div class="entry-value">+ ${fmtMoney(e.value)}</div>
+    <div class="entry-actions">
+      <button class="action-btn" onclick="openEdit('${e.id}')" title="Editar">✏️</button>
+      <button class="action-btn" onclick="openDelete('${e.id}')" title="Apagar">🗑️</button>
+    </div>
+  </div>`;
+}
+
+/* MODAL ADD/EDIT */
+let selectedCat = 'alimentacao';
+
+function openAdd() {
+  state.editId = null;
+  document.getElementById('modalTitle').textContent = 'Novo Lançamento';
+  document.getElementById('inputDesc').value = '';
+  document.getElementById('inputVal').value = '';
+  selectCat('alimentacao');
+  document.getElementById('addOverlay').classList.add('open');
+  setTimeout(() => document.getElementById('inputDesc').focus(), 400);
+}
+
+function openEdit(id) {
+  const e = state.entries.find(x => x.id === id);
+  if (!e) return;
+  state.editId = id;
+  document.getElementById('modalTitle').textContent = 'Editar Lançamento';
+  document.getElementById('inputDesc').value = e.desc;
+  document.getElementById('inputVal').value = e.value.toFixed(2).replace('.', ',');
+  selectCat(e.cat);
+  document.getElementById('addOverlay').classList.add('open');
+}
+
+function saveEntry() {
+  const desc = document.getElementById('inputDesc').value.trim();
+  const valStr = document.getElementById('inputVal').value.replace(',', '.').replace(/[^0-9.]/g,'');
+  const value = parseFloat(valStr);
+
+  if (!desc) { toast('⚠️ Informe uma descrição'); return; }
+  if (isNaN(value) || value <= 0) { toast('⚠️ Informe um valor válido'); return; }
+
+  if (state.editId) {
+    const e = state.entries.find(x => x.id === state.editId);
+    if (e) { e.desc = desc; e.value = value; e.cat = selectedCat; }
+    toast('✅ Atualizado!');
+  } else {
+    state.entries.push({ id: uid(), desc, value, cat: selectedCat, date: new Date().toISOString() });
+    toast('✅ Adicionado!');
+  }
+
+  saveData();
+  closeModal('addOverlay');
+  render();
+}
+
+/* MODAL DELETE */
+function openDelete(id) {
+  state.deleteId = id;
+  const e = state.entries.find(x => x.id === id);
+  document.getElementById('delDesc').textContent = e ? e.desc : '';
+  document.getElementById('delOverlay').classList.add('open');
+}
+
+function confirmDelete() {
+  state.entries = state.entries.filter(x => x.id !== state.deleteId);
+  saveData();
+  closeModal('delOverlay');
+  render();
+  toast('🗑️ Removido!');
+}
+
+/* CAT FILTER */
+function filterCat(cat) {
+  state.filterCat = cat;
+  updateCatChips();
+  render();
+}
+
+function buildCatChips() {
+  const bar = document.getElementById('catsBar');
+  CATS.forEach(c => {
+    const chip = document.createElement('div');
+    chip.className = 'cat-chip';
+    chip.dataset.cat = c.id;
+    chip.style.setProperty('--cat-color', c.color);
+    chip.innerHTML = `<div class="cat-dot" style="background:${c.color}"></div>${c.label}`;
+    chip.onclick = () => filterCat(c.id);
+    bar.appendChild(chip);
+  });
+}
+
+function updateCatChips() {
+  document.querySelectorAll('.cat-chip').forEach(el => {
+    el.classList.toggle('active', el.dataset.cat === state.filterCat);
+  });
+}
+
+/* CAT GRID IN MODAL */
+function buildCatGrid() {
+  const grid = document.getElementById('catGrid');
+  grid.innerHTML = CATS.map(c => `
+    <div class="cat-option" id="copt-${c.id}" style="--cat-color:${c.color}" onclick="selectCat('${c.id}')">
+      <div class="cat-option-icon">${c.icon}</div>
+      <div>${c.label}</div>
+    </div>`).join('');
+}
+
+function selectCat(id) {
+  selectedCat = id;
+  document.querySelectorAll('.cat-option').forEach(el => {
+    el.classList.toggle('selected', el.id === `copt-${id}`);
+  });
+}
+
+/* UTILS */
+function fmtMoney(v) {
+  return 'R$ ' + v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function uid() { return Math.random().toString(36).slice(2) + Date.now().toString(36); }
+
+function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+function closeOnBg(e, id) { if (e.target === document.getElementById(id)) closeModal(id); }
+
+let toastTimer;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2000);
+}
+
+// Formatar valor enquanto digita
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('inputVal').addEventListener('input', function() {
+    let v = this.value.replace(/[^0-9,]/g,'');
+    this.value = v;
+  });
+  init();
+});
+
+// SERVICE WORKER inline
+if ('serviceWorker' in navigator) {
+  const sw = `
+    self.addEventListener('install', e => self.skipWaiting());
+    self.addEventListener('activate', e => clients.claim());
+    self.addEventListener('fetch', e => e.respondWith(fetch(e.request).catch(() => caches.match(e.request))));
+  `;
+  const blob = new Blob([sw], { type: 'application/javascript' });
+  navigator.serviceWorker.register(URL.createObjectURL(blob));
+}
+</script>
+</body>
+</html>
